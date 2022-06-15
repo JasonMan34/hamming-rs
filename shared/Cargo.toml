@@ -1,5 +1,5 @@
 [package]
-name = "hamming-encoder"
+name = "shared"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,4 +7,3 @@ edition = "2021"
 
 [dependencies]
 bitvec = "1.0.0"
-shared = { path = "../shared" }

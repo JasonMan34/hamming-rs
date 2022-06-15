@@ -1,4 +1,8 @@
-use bitvec::prelude::*;
+use bitvec::field::BitField;
+use bitvec::prelude::AsBits;
+use bitvec::prelude::BitVec;
+use bitvec::prelude::Lsb0;
+use shared::parity_check;
 
 fn fix_parity(bits: &mut BitVec, parity: usize) {
     let mut index = 1;
@@ -10,15 +14,6 @@ fn fix_parity(bits: &mut BitVec, parity: usize) {
 
         index = index * 2;
     }
-}
-
-fn parity_check(bits: &BitVec) -> usize {
-    bits.iter()
-        .enumerate()
-        .filter(|(_, bit)| **bit)
-        .map(|(bit_index, _)| bit_index)
-        .reduce(|bit_index_1, bit_index_2| bit_index_1 ^ bit_index_2)
-        .unwrap_or(0)
 }
 
 // fn new_index_to_og_index(index: usize) -> usize {
