@@ -11,11 +11,6 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     }
 }
 
-fn new_index_to_og_index(index: usize) -> usize {
-    println!("index is {}", index);
-    index - ((index as f64).log2().ceil() as usize) - 1
-}
-
 pub fn decode(file: Vec<u8>) -> Vec<u8> {
     let padded_bits_count = file[7];
     let chunk_size = file[8] as usize;
@@ -28,7 +23,7 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
     let mut decoded_bitvec: BitVec<usize, Lsb0> =
         BitVec::with_capacity(chunks_count * decoded_chunk_size / 8 - (padded_bits_count as usize));
 
-    for (chunk_index, mut chunk) in chunks.enumerate() {
+    for (chunk_index, chunk) in chunks.enumerate() {
         println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut chunk_vec = BitVec::from(chunk);
         let parity = parity_check_u8(&chunk_vec);
@@ -45,6 +40,10 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
         for bit in decoded_chunk.iter() {
             decoded_bitvec.push(*bit);
         }
+    }
+
+    for _ in 0..padded_bits_count {
+        decoded_bitvec.pop();
     }
 
     let mut decoded_file: Vec<u8> = Vec::with_capacity(chunks_count * decoded_chunk_size / 8);

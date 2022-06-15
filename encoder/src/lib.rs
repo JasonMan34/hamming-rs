@@ -66,19 +66,20 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     encoded_file
 }
 
-pub fn encode_7_4(file: Vec<u8>) -> Vec<u8> {
+pub fn encode_7_4(file: &[u8]) -> Vec<u8> {
     encode(&file, 8)
 }
 
-pub fn encode_15_11(file: Vec<u8>) -> Vec<u8> {
+pub fn encode_15_11(file: &[u8]) -> Vec<u8> {
     encode(&file, 16)
 }
 
 pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
-    let og_file = std::fs::read_to_string(file_in)?;
+    let og_file = std::fs::read_to_string(&file_in)?;
     // let encoded_file = encode_7_4(og_file.into_bytes());
-    let encoded_file = encode_15_11(og_file.into_bytes());
+    let encoded_file = encode_15_11(og_file.as_bytes());
 
+    std::fs::write(file_in + "_test.txt", og_file)?;
     std::fs::write(file_out, encoded_file)?;
 
     Ok(())
