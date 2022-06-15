@@ -25,7 +25,7 @@ fn og_index_to_new_index(index: usize) -> usize {
     index_list[index]
 }
 
-pub fn encode(file: Vec<u8>, final_chunk_size: usize) -> Vec<u8> {
+pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     if (final_chunk_size as f64).log2().fract() != 0.0 {
         panic!("final_chunk_size must be a power of 2");
     }
@@ -43,6 +43,7 @@ pub fn encode(file: Vec<u8>, final_chunk_size: usize) -> Vec<u8> {
     encoded_file.push(b'n');
     encoded_file.push(b'g');
     encoded_file.push(0);
+    encoded_file.push(final_chunk_size as u8);
 
     for (chunk_index, chunk) in chunks.enumerate() {
         println!("Chunk #{} is: {}", chunk_index + 1, chunk);
@@ -70,19 +71,19 @@ pub fn encode(file: Vec<u8>, final_chunk_size: usize) -> Vec<u8> {
 }
 
 pub fn encode_7_4(file: Vec<u8>) -> Vec<u8> {
-    encode(file, 8)
+    encode(&file, 8)
 }
 
 pub fn encode_15_11(file: Vec<u8>) -> Vec<u8> {
-    encode(file, 16)
+    encode(&file, 16)
 }
 
-pub fn run(file_path: String, output_file_path: String) -> Result<(), Box<dyn std::error::Error>> {
-    let og_file = std::fs::read_to_string(file_path)?;
+pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
+    let og_file = std::fs::read_to_string(file_in)?;
     // let encoded_file = encode_7_4(og_file.into_bytes());
     let encoded_file = encode_15_11(og_file.into_bytes());
 
-    std::fs::write(output_file_path, encoded_file)?;
+    std::fs::write(file_out, encoded_file)?;
 
     Ok(())
 }
