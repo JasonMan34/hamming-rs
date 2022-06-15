@@ -39,9 +39,18 @@ pub fn encode(file: Vec<u8>, final_chunk_size: usize) -> Vec<u8> {
 
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size);
     let chunks_count = chunks.clone().count();
-    let mut encoded_file: Vec<u8> = Vec::with_capacity(chunks_count * (final_chunk_size / 8));
+    let mut encoded_file: Vec<u8> = Vec::with_capacity(chunks_count * (final_chunk_size / 8) + 8);
+    encoded_file.push(b'h');
+    encoded_file.push(b'a');
+    encoded_file.push(b'm');
+    encoded_file.push(b'm');
+    encoded_file.push(b'i');
+    encoded_file.push(b'n');
+    encoded_file.push(b'g');
+    encoded_file.push(0);
 
-    for (_, chunk) in chunks.enumerate() {
+    for (chunk_index, chunk) in chunks.enumerate() {
+        println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut new_chunk: BitVec<usize, Lsb0> = BitVec::with_capacity(final_chunk_size);
         unsafe { new_chunk.set_len(final_chunk_size) }
         new_chunk.fill(false);
@@ -56,6 +65,10 @@ pub fn encode(file: Vec<u8>, final_chunk_size: usize) -> Vec<u8> {
         for byte in new_chunk.chunks(8) {
             encoded_file.push(byte.load());
         }
+
+        if chunk.len() != chunk_size {
+            encoded_file[7] = (chunk_size - chunk.len()) as u8;
+        }
     }
 
     encoded_file
@@ -65,9 +78,14 @@ pub fn encode_7_4(file: Vec<u8>) -> Vec<u8> {
     encode(file, 8)
 }
 
+pub fn encode_15_11(file: Vec<u8>) -> Vec<u8> {
+    encode(file, 16)
+}
+
 pub fn run(file_path: String, output_file_path: String) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read_to_string(file_path)?;
-    let encoded_file = encode_7_4(og_file.into_bytes());
+    // let encoded_file = encode_7_4(og_file.into_bytes());
+    let encoded_file = encode_15_11(og_file.into_bytes());
 
     std::fs::write(output_file_path, encoded_file)?;
 
