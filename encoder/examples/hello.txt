@@ -1,0 +1,5 @@
+This file is a test for the encoder.
+I will be using it for multiple things
+Here is an emoji! 😎
+Also hebrew text: שלום אני טקסט בעברית
+Alright bye!
