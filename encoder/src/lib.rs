@@ -16,10 +16,6 @@ fn fix_parity(bits: &mut BitVec, parity: usize) {
     }
 }
 
-// fn new_index_to_og_index(index: usize) -> usize {
-//     index - ((index as f64).log2().ceil() as usize) - 1
-// }
-
 fn og_index_to_new_index(index: usize) -> usize {
     let index_list = [3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15];
     index_list[index]
@@ -34,7 +30,7 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
 
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size);
     let chunks_count = chunks.clone().count();
-    let mut encoded_file: Vec<u8> = Vec::with_capacity(chunks_count * (final_chunk_size / 8) + 8);
+    let mut encoded_file: Vec<u8> = Vec::with_capacity(chunks_count * final_chunk_size / 8 + 8);
     encoded_file.push(b'h');
     encoded_file.push(b'a');
     encoded_file.push(b'm');

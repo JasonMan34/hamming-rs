@@ -29,26 +29,21 @@
           "kind": "bin"
         }
       },
-      "args": ["./encoder/examples/hello.txt"],
+      "args": ["./examples/hello_to_encode.txt", "./examples/hello.hamming"],
       "cwd": "${workspaceFolder}"
     },
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug unit tests in executable 'hamming-encoder'",
+      "name": "Debug executable 'hamming-decoder'",
       "cargo": {
-        "args": [
-          "test",
-          "--no-run",
-          "--bin=hamming-encoder",
-          "--package=hamming-encoder"
-        ],
+        "args": ["build", "--bin=hamming-decoder", "--package=hamming-decoder"],
         "filter": {
-          "name": "hamming-encoder",
+          "name": "hamming-decoder",
           "kind": "bin"
         }
       },
-      "args": [],
+      "args": ["./examples/hello.hamming", "./examples/hello_decoded.txt"],
       "cwd": "${workspaceFolder}"
     },
     {
