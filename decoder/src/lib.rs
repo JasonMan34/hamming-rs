@@ -2,7 +2,7 @@ use bitvec::field::BitField;
 use bitvec::prelude::AsBits;
 use bitvec::prelude::BitVec;
 use bitvec::prelude::Lsb0;
-use shared::parity_check_u8;
+use shared::parity_check;
 
 fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     if parity != 0 {
@@ -13,12 +13,12 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
 
 pub fn decode(file: Vec<u8>) -> Vec<u8> {
     let padded_bits_count = file[7];
-    let chunk_size = file[8] as usize;
+    let chunk_size = file[8];
     let file = &file[9..];
 
     let decoded_chunk_size = ((chunk_size as f64) - (chunk_size as f64).log2() - 1.0) as usize;
 
-    let chunks = file.as_bits::<Lsb0>().chunks(chunk_size);
+    let chunks = file.as_bits::<Lsb0>().chunks(chunk_size as usize);
     let chunks_count = chunks.clone().count();
     let mut decoded_bitvec: BitVec<usize, Lsb0> =
         BitVec::with_capacity(chunks_count * decoded_chunk_size / 8 - (padded_bits_count as usize));
@@ -26,7 +26,7 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
     for (chunk_index, chunk) in chunks.enumerate() {
         println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut chunk_vec = BitVec::from(chunk);
-        let parity = parity_check_u8(&chunk_vec);
+        let parity = parity_check(&chunk_vec);
         fix_parity(&mut chunk_vec, parity);
 
         let mut decoded_chunk: BitVec<usize, Lsb0> = BitVec::with_capacity(decoded_chunk_size);

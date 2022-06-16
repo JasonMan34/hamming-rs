@@ -4,7 +4,7 @@ use bitvec::prelude::BitVec;
 use bitvec::prelude::Lsb0;
 use shared::parity_check;
 
-fn fix_parity(bits: &mut BitVec, parity: usize) {
+fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     let mut index = 1;
     while index <= parity {
         if index & parity != 0 {
@@ -43,7 +43,7 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
 
     for (chunk_index, chunk) in chunks.enumerate() {
         println!("Chunk #{} is: {}", chunk_index + 1, chunk);
-        let mut new_chunk: BitVec<usize, Lsb0> = BitVec::with_capacity(final_chunk_size);
+        let mut new_chunk: BitVec<u8, Lsb0> = BitVec::with_capacity(final_chunk_size);
         unsafe { new_chunk.set_len(final_chunk_size) }
         new_chunk.fill(false);
 
