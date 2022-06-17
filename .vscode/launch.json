@@ -7,20 +7,6 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug unit tests in library 'hamming-encoder'",
-      "cargo": {
-        "args": ["test", "--no-run", "--lib", "--package=hamming-encoder"],
-        "filter": {
-          "name": "hamming-encoder",
-          "kind": "lib"
-        }
-      },
-      "args": [],
-      "cwd": "${workspaceFolder}"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
       "name": "Debug executable 'hamming-encoder'",
       "cargo": {
         "args": ["build", "--bin=hamming-encoder", "--package=hamming-encoder"],
@@ -49,15 +35,15 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug unit tests in library 'hamming-decoder'",
+      "name": "Debug executable 'hamming-corruptor'",
       "cargo": {
-        "args": ["test", "--no-run", "--lib", "--package=hamming-decoder"],
+        "args": ["build", "--bin=hamming-corrupt", "--package=hamming-corrupt"],
         "filter": {
-          "name": "hamming-decoder",
-          "kind": "lib"
+          "name": "hamming-corrupt",
+          "kind": "bin"
         }
       },
-      "args": [],
+      "args": ["./examples/hello.hamming"],
       "cwd": "${workspaceFolder}"
     }
   ]

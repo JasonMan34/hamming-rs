@@ -20,8 +20,13 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
 
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size as usize);
     let chunks_count = chunks.clone().count();
-    let mut decoded_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(
-        ((chunks_count - 1) * decoded_chunk_size + (last_chunk_bitcount as usize)) / 8,
+    let decoded_file_bit_count =
+        (chunks_count - 1) * decoded_chunk_size + (last_chunk_bitcount as usize);
+
+    let mut decoded_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(decoded_file_bit_count);
+    println!(
+        "Decoded file will have {} bytes",
+        decoded_file_bit_count / 8
     );
 
     for (chunk_index, chunk) in chunks.enumerate() {
@@ -37,7 +42,7 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
         }
     }
 
-    for _ in 0..last_chunk_bitcount {
+    for _ in 0..(decoded_chunk_size as u8 - last_chunk_bitcount) {
         decoded_bitvec.pop();
     }
 

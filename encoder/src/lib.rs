@@ -21,6 +21,7 @@ fn og_index_to_new_index(index: usize) -> usize {
 }
 
 pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
+    println!("File is made of {} bytes", file.len());
     if (final_chunk_size as f64).log2().fract() != 0.0 {
         panic!("final_chunk_size must be a power of 2");
     }
