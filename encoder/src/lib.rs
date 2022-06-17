@@ -8,11 +8,10 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     let mut index = 1;
     while index <= parity {
         if index & parity != 0 {
-            let value = bits[index];
-            bits.set(index, !value);
+            bits.set(index, true);
         }
 
-        index = index * 2;
+        index *= 2;
     }
 }
 
@@ -52,14 +51,20 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
         }
 
         let parity = parity_check(&new_chunk);
+        println!("NEW chunk #{} is: {}", chunk_index + 1, new_chunk);
         fix_parity(&mut new_chunk, parity);
+        println!(
+            "NEW chunk #{} AFTER PARITY FIXING is: {}",
+            chunk_index + 1,
+            new_chunk
+        );
 
         for byte in new_chunk.chunks(8) {
             encoded_file.push(byte.load());
         }
 
         if chunk.len() != chunk_size {
-            encoded_file[7] = (chunk_size - chunk.len()) as u8;
+            encoded_file[7] = chunk.len() as u8;
         }
     }
 

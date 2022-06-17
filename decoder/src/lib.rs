@@ -12,7 +12,7 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
 }
 
 pub fn decode(file: Vec<u8>) -> Vec<u8> {
-    let padded_bits_count = file[7];
+    let last_chunk_bitcount = file[7];
     let chunk_size = file[8];
     let file = &file[9..];
 
@@ -20,8 +20,9 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
 
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size as usize);
     let chunks_count = chunks.clone().count();
-    let mut decoded_bitvec: BitVec<usize, Lsb0> =
-        BitVec::with_capacity(chunks_count * decoded_chunk_size / 8 - (padded_bits_count as usize));
+    let mut decoded_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(
+        ((chunks_count - 1) * decoded_chunk_size + (last_chunk_bitcount as usize)) / 8,
+    );
 
     for (chunk_index, chunk) in chunks.enumerate() {
         println!("Chunk #{} is: {}", chunk_index + 1, chunk);
@@ -29,24 +30,18 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
         let parity = parity_check(&chunk_vec);
         fix_parity(&mut chunk_vec, parity);
 
-        let mut decoded_chunk: BitVec<usize, Lsb0> = BitVec::with_capacity(decoded_chunk_size);
-
         for (bit_index, bit) in chunk.iter().enumerate().skip(3) {
             if (bit_index as f64).log2().fract() != 0.0 {
-                decoded_chunk.push(*bit);
+                decoded_bitvec.push(*bit);
             }
-        }
-
-        for bit in decoded_chunk.iter() {
-            decoded_bitvec.push(*bit);
         }
     }
 
-    for _ in 0..padded_bits_count {
+    for _ in 0..last_chunk_bitcount {
         decoded_bitvec.pop();
     }
 
-    let mut decoded_file: Vec<u8> = Vec::with_capacity(chunks_count * decoded_chunk_size / 8);
+    let mut decoded_file: Vec<u8> = Vec::with_capacity(decoded_bitvec.capacity());
     for byte in decoded_bitvec.chunks(8) {
         decoded_file.push(byte.load());
     }
