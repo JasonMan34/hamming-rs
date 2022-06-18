@@ -5,9 +5,7 @@ use rand::Rng;
 
 pub fn corrupt(file: &[u8]) -> Vec<u8> {
     let chunk_size = file[8] as usize;
-    let file = &file[9..];
-
-    let mut bits = file.as_bits::<Lsb0>().to_owned();
+    let mut bits = (&file[9..]).as_bits::<Lsb0>().to_owned();
 
     for chunk in bits.chunks_mut(chunk_size) {
         let bit_index = rand::thread_rng().gen_range(0..chunk_size);
@@ -16,7 +14,11 @@ pub fn corrupt(file: &[u8]) -> Vec<u8> {
         chunk.set(bit_index, !value);
     }
 
-    let mut corrupted_file: Vec<u8> = Vec::with_capacity((file.len() + 9) * 8);
+    let mut corrupted_file: Vec<u8> = Vec::with_capacity(file.len() * 8);
+
+    for i in 0..9 {
+        corrupted_file.push(file[i]);
+    }
 
     for byte in bits.chunks(8) {
         corrupted_file.push(byte.load());

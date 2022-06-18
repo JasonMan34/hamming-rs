@@ -42,23 +42,26 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     encoded_file.push(final_chunk_size as u8);
 
     for (chunk_index, chunk) in chunks.enumerate() {
-        println!("Chunk #{} is: {}", chunk_index + 1, chunk);
+        // println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut new_chunk: BitVec<u8, Lsb0> = BitVec::with_capacity(final_chunk_size);
         unsafe { new_chunk.set_len(final_chunk_size) }
         new_chunk.fill(false);
 
+        let mut debug_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(chunk_size);
         for (bit_index, bit) in chunk.iter().enumerate() {
+            debug_bitvec.push(*bit);
             new_chunk.set(og_index_to_new_index(bit_index), *bit);
         }
+        println!("Encoded chunk #{}: {}", chunk_index + 1, debug_bitvec);
 
         let parity = parity_check(&new_chunk);
-        println!("NEW chunk #{} is: {}", chunk_index + 1, new_chunk);
+        // println!("NEW chunk #{} is: {}", chunk_index + 1, new_chunk);
         fix_parity(&mut new_chunk, parity);
-        println!(
-            "NEW chunk #{} AFTER PARITY FIXING is: {}",
-            chunk_index + 1,
-            new_chunk
-        );
+        // println!(
+        //     "NEW chunk #{} AFTER PARITY FIXING is: {}",
+        //     chunk_index + 1,
+        //     new_chunk
+        // );
 
         for byte in new_chunk.chunks(8) {
             encoded_file.push(byte.load());
@@ -85,7 +88,6 @@ pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::
     // let encoded_file = encode_7_4(og_file.into_bytes());
     let encoded_file = encode_15_11(og_file.as_bytes());
 
-    std::fs::write(file_in + "_test.txt", og_file)?;
     std::fs::write(file_out, encoded_file)?;
 
     Ok(())

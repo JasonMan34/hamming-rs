@@ -5,10 +5,8 @@ use bitvec::prelude::Lsb0;
 use shared::parity_check;
 
 fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
-    if parity != 0 {
-        let value = bits[parity];
-        bits.set(parity, !value);
-    }
+    let value = bits[parity];
+    bits.set(parity, !value);
 }
 
 pub fn decode(file: Vec<u8>) -> Vec<u8> {
@@ -29,11 +27,10 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
         decoded_file_bit_count / 8
     );
 
-    for (chunk_index, chunk) in chunks.enumerate() {
-        println!("Chunk #{} is: {}", chunk_index + 1, chunk);
-        let mut chunk_vec = BitVec::from(chunk);
-        let parity = parity_check(&chunk_vec);
-        fix_parity(&mut chunk_vec, parity);
+    for chunk in chunks {
+        let mut chunk = BitVec::from(chunk);
+        let parity = parity_check(&chunk);
+        fix_parity(&mut chunk, parity);
 
         for (bit_index, bit) in chunk.iter().enumerate().skip(3) {
             if (bit_index as f64).log2().fract() != 0.0 {
@@ -56,7 +53,6 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
 
 pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read(file_in)?;
-    // let encoded_file = encode_7_4(og_file.into_bytes());
     let decoded_file = decode(og_file);
 
     std::fs::write(file_out, decoded_file)?;
