@@ -9,7 +9,7 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     bits.set(parity, !value);
 }
 
-pub fn decode(file: Vec<u8>) -> Vec<u8> {
+pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
     let last_chunk_bitcount = file[7];
     let chunk_size = file[8];
     let file = &file[9..];
@@ -29,8 +29,10 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
 
     for chunk in chunks {
         let mut chunk = BitVec::from(chunk);
-        let parity = parity_check(&chunk);
-        fix_parity(&mut chunk, parity);
+        if fix {
+            let parity = parity_check(&chunk);
+            fix_parity(&mut chunk, parity);
+        }
 
         for (bit_index, bit) in chunk.iter().enumerate().skip(3) {
             if (bit_index as f64).log2().fract() != 0.0 {
@@ -53,8 +55,13 @@ pub fn decode(file: Vec<u8>) -> Vec<u8> {
 
 pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read(file_in)?;
-    let decoded_file = decode(og_file);
+    let decoded_file = decode(og_file.clone(), true);
+    let corrupted_file = decode(og_file, false);
+    let cor_t = &file_out[..file_out.len() - 4];
+    let mut cor_t = String::from(cor_t);
+    cor_t.push_str("_corrupted.txt");
 
+    std::fs::write(cor_t, corrupted_file)?;
     std::fs::write(file_out, decoded_file)?;
 
     Ok(())
