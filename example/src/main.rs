@@ -1,8 +1,8 @@
 use hamming_corruptor;
 use hamming_decoder;
-use hamming_encoder;
+use hamming_encoder::{self, HammingLevel};
 
-fn parse_args() -> (String, String, String) {
+fn parse_args() -> (String, String, String, HammingLevel) {
     let mut args = std::env::args();
     args.next();
 
@@ -30,11 +30,25 @@ fn parse_args() -> (String, String, String) {
         }
     };
 
-    (file_to_encode, encoded_file, decoded_file)
+    let level = match args.next().as_deref() {
+        Some("1") => HammingLevel::L1,
+        Some("2") => HammingLevel::L2,
+        Some("3") => HammingLevel::L3,
+        Some(_) => {
+            eprintln!("Invalid hamming level specified. Valid values are 1/2/3");
+            std::process::exit(1);
+        }
+        None => {
+            eprintln!("Did not supply decoded_file argument");
+            std::process::exit(1);
+        }
+    };
+
+    (file_to_encode, encoded_file, decoded_file, level)
 }
 
-fn encode(file_to_encode: &str, encoded_file: &str) {
-    if let Err(e) = hamming_encoder::run(file_to_encode, encoded_file) {
+fn encode(file_to_encode: &str, encoded_file: &str, level: HammingLevel) {
+    if let Err(e) = hamming_encoder::run(file_to_encode, encoded_file, level) {
         eprintln!("Application error: {}", e);
 
         let paths = std::fs::read_dir("./").unwrap();
@@ -76,9 +90,9 @@ fn decode(file_to_decode: &str, decoded_file: &str) {
 }
 
 fn main() {
-    let (file_to_encode, encoded_file, decoded_file) = parse_args();
+    let (file_to_encode, encoded_file, decoded_file, level) = parse_args();
 
-    encode(&file_to_encode, &encoded_file);
+    encode(&file_to_encode, &encoded_file, level);
     corrupt(&encoded_file);
     decode(&encoded_file, &decoded_file);
 }

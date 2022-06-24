@@ -43,30 +43,15 @@ fn og_index_to_new_index(index: usize) -> usize {
 /// `file` - A u8 vector slice representing the file in bytes\
 /// `final_chunk_size` - The **final** chunk size for each chunk in the encoded file.
 /// Note that this must be a power of 2, and cannot be larger than 16, so realistically speaking this has to be 8 or 16
-///
-/// # Examples
-/// When given a parity of 13 (`1101`) - the function will flip the bits
-/// in index 1, 4, and 8 (`0001`, `0100`, and `1000`)
-///
-/// # Panics
-/// The function will panic if `parity` is equal to or larger than the length of `bits`
-///
-pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
+fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     println!("=============== ENCODING ===============");
-    // println!("File is made of {} bytes", file.len());
     if (final_chunk_size as f64).log2().fract() != 0.0 {
         panic!("final_chunk_size must be a power of 2");
     }
 
     let chunk_size = ((final_chunk_size as f64) - (final_chunk_size as f64).log2() - 1.0) as usize;
-
-    println!("Chunk size is {}", chunk_size);
-    println!("Final chunk size is {}", final_chunk_size);
-
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size);
     let chunks_count = chunks.clone().count();
-
-    println!("Chunks count is {}", chunks_count);
 
     let mut encoded_bitvec: BitVec<u8, Lsb0> =
         BitVec::with_capacity(chunks_count * final_chunk_size / 8);
@@ -74,26 +59,16 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     let mut last_chunk_size = chunk_size;
 
     for (_, chunk) in chunks.enumerate() {
-        // println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut new_chunk: BitVec<u8, Lsb0> = BitVec::with_capacity(final_chunk_size);
         unsafe { new_chunk.set_len(final_chunk_size) }
         new_chunk.fill(false);
 
-        // let mut debug_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(chunk_size);
         for (bit_index, bit) in chunk.iter().enumerate() {
-            // debug_bitvec.push(*bit);
             new_chunk.set(og_index_to_new_index(bit_index), *bit);
         }
-        // println!("Encoded chunk #{}: {}", chunk_index + 1, debug_bitvec);
 
         let parity = parity_check(&new_chunk);
-        // println!("NEW chunk #{} is: {}", chunk_index + 1, new_chunk);
         fix_parity(&mut new_chunk, parity);
-        // println!(
-        //     "NEW chunk #{} AFTER PARITY FIXING is: {}",
-        //     chunk_index + 1,
-        //     new_chunk
-        // );
 
         for bit in new_chunk {
             encoded_bitvec.push(bit);
@@ -122,18 +97,41 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     encoded_file
 }
 
-pub fn encode_7_4(file: &[u8]) -> Vec<u8> {
+fn encode_4_1(file: &[u8]) -> Vec<u8> {
     encode(&file, 4)
 }
+fn encode_8_4(file: &[u8]) -> Vec<u8> {
+    encode(&file, 8)
+}
 
-pub fn encode_15_11(file: &[u8]) -> Vec<u8> {
+fn encode_16_11(file: &[u8]) -> Vec<u8> {
     encode(&file, 16)
 }
 
-pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Error>> {
+/// The higher the level (1 being the highest),
+/// the more resilient the encoded file will be to corruptions,
+/// but it will also take more space
+pub enum HammingLevel {
+    /// Resilient for up to 100% original data corruption, takes 4 times more space
+    L1,
+    /// Resilient for up to 25% original data corruption, takes 2 times more space
+    L2,
+    /// Resilient for up to 10% original data corruption, takes 1.4 times more space
+    L3,
+}
+
+pub fn run(
+    file_in: &str,
+    file_out: &str,
+    level: HammingLevel,
+) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read_to_string(&file_in)?;
-    let encoded_file = encode_7_4(og_file.as_bytes());
-    // let encoded_file = encode_15_11(og_file.as_bytes());
+
+    let encoded_file = match level {
+        HammingLevel::L1 => encode_4_1(og_file.as_bytes()),
+        HammingLevel::L2 => encode_8_4(og_file.as_bytes()),
+        HammingLevel::L3 => encode_16_11(og_file.as_bytes()),
+    };
 
     std::fs::write(file_out, encoded_file)?;
 

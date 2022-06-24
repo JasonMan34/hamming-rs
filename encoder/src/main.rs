@@ -1,4 +1,6 @@
-fn parse_args() -> (String, String) {
+use hamming_encoder::HammingLevel;
+
+fn parse_args() -> (String, String, HammingLevel) {
     let mut args = std::env::args();
     args.next();
 
@@ -18,13 +20,27 @@ fn parse_args() -> (String, String) {
         }
     };
 
-    (file_in, file_out)
+    let level = match args.next().as_deref() {
+        Some("1") => HammingLevel::L1,
+        Some("2") => HammingLevel::L2,
+        Some("3") => HammingLevel::L3,
+        Some(_) => {
+            eprintln!("Invalid hamming level specified. Valid values are 1/2/3");
+            std::process::exit(1);
+        }
+        None => {
+            eprintln!("Did not supply decoded_file argument");
+            std::process::exit(1);
+        }
+    };
+
+    (file_in, file_out, level)
 }
 
 fn main() {
-    let (file_in, file_out) = parse_args();
+    let (file_in, file_out, level) = parse_args();
 
-    if let Err(e) = hamming_encoder::run(&file_in, &file_out) {
+    if let Err(e) = hamming_encoder::run(&file_in, &file_out, level) {
         eprintln!("Application error: {}", e);
 
         let paths = std::fs::read_dir("./").unwrap();
