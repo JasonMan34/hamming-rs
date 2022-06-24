@@ -41,7 +41,7 @@ pub fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     encoded_file.push(0);
     encoded_file.push(final_chunk_size as u8);
 
-    for (chunk_index, chunk) in chunks.enumerate() {
+    for (_, chunk) in chunks.enumerate() {
         // println!("Chunk #{} is: {}", chunk_index + 1, chunk);
         let mut new_chunk: BitVec<u8, Lsb0> = BitVec::with_capacity(final_chunk_size);
         unsafe { new_chunk.set_len(final_chunk_size) }

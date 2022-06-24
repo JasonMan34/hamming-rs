@@ -3,6 +3,7 @@
 members = [
     "encoder",
     "decoder",
-    "corrupt",
-    "shared"
+    "corruptor",
+    "shared",
+    "example"
 ]

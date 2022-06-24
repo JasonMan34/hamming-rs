@@ -37,9 +37,13 @@
       "request": "launch",
       "name": "Debug executable 'hamming-corruptor'",
       "cargo": {
-        "args": ["build", "--bin=hamming-corrupt", "--package=hamming-corrupt"],
+        "args": [
+          "build",
+          "--bin=hamming-corruptor",
+          "--package=hamming-corruptor"
+        ],
         "filter": {
-          "name": "hamming-corrupt",
+          "name": "hamming-corruptor",
           "kind": "bin"
         }
       },
