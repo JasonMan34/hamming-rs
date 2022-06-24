@@ -54,6 +54,9 @@ pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
 }
 
 pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
+    use std::time::Instant;
+    let now = Instant::now();
+
     let og_file = std::fs::read(file_in)?;
     let decoded_file = decode(og_file.clone(), true);
     let corrupted_file = decode(og_file, false);
@@ -63,6 +66,9 @@ pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::
 
     std::fs::write(cor_t, corrupted_file)?;
     std::fs::write(file_out, decoded_file)?;
+
+    let elapsed = now.elapsed();
+    println!("Decoding took: {:.2?}", elapsed);
 
     Ok(())
 }
