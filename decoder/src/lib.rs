@@ -10,11 +10,16 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
 }
 
 pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
+    println!("=============== DECODING ===============");
     let last_chunk_bitcount = file[7];
     let chunk_size = file[8];
     let file = &file[9..];
 
     let decoded_chunk_size = ((chunk_size as f64) - (chunk_size as f64).log2() - 1.0) as usize;
+
+    println!("Last chunk bitcount is {}", last_chunk_bitcount);
+    println!("Chunk size is {}", chunk_size);
+    println!("Decoded chunk size is {}", decoded_chunk_size);
 
     let chunks = file.as_bits::<Lsb0>().chunks(chunk_size as usize);
     let chunks_count = chunks.clone().count();
@@ -22,6 +27,9 @@ pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
         (chunks_count - 1) * decoded_chunk_size + (last_chunk_bitcount as usize);
 
     let mut decoded_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(decoded_file_bit_count);
+
+    println!("Chunks count is {}", chunks_count);
+    println!("Decoded file bit count is {}", decoded_file_bit_count);
 
     for chunk in chunks {
         let mut chunk = BitVec::from(chunk);
