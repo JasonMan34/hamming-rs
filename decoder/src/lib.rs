@@ -22,10 +22,6 @@ pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
         (chunks_count - 1) * decoded_chunk_size + (last_chunk_bitcount as usize);
 
     let mut decoded_bitvec: BitVec<u8, Lsb0> = BitVec::with_capacity(decoded_file_bit_count);
-    println!(
-        "Decoded file will have {} bytes",
-        decoded_file_bit_count / 8
-    );
 
     for chunk in chunks {
         let mut chunk = BitVec::from(chunk);
@@ -54,9 +50,6 @@ pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
 }
 
 pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Error>> {
-    use std::time::Instant;
-    let now = Instant::now();
-
     let og_file = std::fs::read(file_in)?;
     let decoded_file = decode(og_file.clone(), true);
     let corrupted_file = decode(og_file, false);
@@ -66,9 +59,6 @@ pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Erro
 
     std::fs::write(cor_t, corrupted_file)?;
     std::fs::write(file_out, decoded_file)?;
-
-    let elapsed = now.elapsed();
-    println!("Decoding took: {:.2?}", elapsed);
 
     Ok(())
 }

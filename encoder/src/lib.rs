@@ -84,17 +84,11 @@ pub fn encode_15_11(file: &[u8]) -> Vec<u8> {
 }
 
 pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Error>> {
-    use std::time::Instant;
-    let now = Instant::now();
-
     let og_file = std::fs::read_to_string(&file_in)?;
     let encoded_file = encode_7_4(og_file.as_bytes());
     // let encoded_file = encode_15_11(og_file.as_bytes());
 
     std::fs::write(file_out, encoded_file)?;
-
-    let elapsed = now.elapsed();
-    println!("Encoding took: {:.2?}", elapsed);
 
     Ok(())
 }
