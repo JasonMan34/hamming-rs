@@ -27,7 +27,7 @@ pub fn corrupt(file: &[u8]) -> Vec<u8> {
     corrupted_file
 }
 
-pub fn run(file: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run(file: &str) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read(&file)?;
     let corrupted_file = corrupt(&og_file);
 

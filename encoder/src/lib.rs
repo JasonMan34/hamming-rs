@@ -83,7 +83,7 @@ pub fn encode_15_11(file: &[u8]) -> Vec<u8> {
     encode(&file, 16)
 }
 
-pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Error>> {
     use std::time::Instant;
     let now = Instant::now();
 

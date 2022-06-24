@@ -53,7 +53,7 @@ pub fn decode(file: Vec<u8>, fix: bool) -> Vec<u8> {
     decoded_file
 }
 
-pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run(file_in: &str, file_out: &str) -> Result<(), Box<dyn std::error::Error>> {
     use std::time::Instant;
     let now = Instant::now();
 

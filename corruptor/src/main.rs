@@ -16,7 +16,7 @@ fn parse_args() -> String {
 fn main() {
     let file = parse_args();
 
-    if let Err(e) = hamming_corruptor::run(file) {
+    if let Err(e) = hamming_corruptor::run(&file) {
         eprintln!("Application error: {}", e);
 
         let paths = std::fs::read_dir("./").unwrap();

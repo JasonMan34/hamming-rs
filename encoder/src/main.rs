@@ -24,7 +24,7 @@ fn parse_args() -> (String, String) {
 fn main() {
     let (file_in, file_out) = parse_args();
 
-    if let Err(e) = hamming_encoder::run(file_in, file_out) {
+    if let Err(e) = hamming_encoder::run(&file_in, &file_out) {
         eprintln!("Application error: {}", e);
 
         let paths = std::fs::read_dir("./").unwrap();
