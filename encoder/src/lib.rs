@@ -85,8 +85,8 @@ pub fn encode_15_11(file: &[u8]) -> Vec<u8> {
 
 pub fn run(file_in: String, file_out: String) -> Result<(), Box<dyn std::error::Error>> {
     let og_file = std::fs::read_to_string(&file_in)?;
-    // let encoded_file = encode_7_4(og_file.into_bytes());
-    let encoded_file = encode_15_11(og_file.as_bytes());
+    let encoded_file = encode_7_4(og_file.as_bytes());
+    // let encoded_file = encode_15_11(og_file.as_bytes());
 
     std::fs::write(file_out, encoded_file)?;
 
