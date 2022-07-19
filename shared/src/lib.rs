@@ -8,12 +8,3 @@ pub fn parity_check(bits: &BitVec<u8>) -> usize {
         .reduce(|bit_index_1, bit_index_2| bit_index_1 ^ bit_index_2)
         .unwrap_or(0)
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
-    }
-}

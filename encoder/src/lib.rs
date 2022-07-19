@@ -97,14 +97,15 @@ fn encode(file: &[u8], final_chunk_size: usize) -> Vec<u8> {
     encoded_file
 }
 
-fn encode_4_1(file: &[u8]) -> Vec<u8> {
+pub fn encode_4_1(file: &[u8]) -> Vec<u8> {
     encode(&file, 4)
 }
-fn encode_8_4(file: &[u8]) -> Vec<u8> {
+
+pub fn encode_8_4(file: &[u8]) -> Vec<u8> {
     encode(&file, 8)
 }
 
-fn encode_16_11(file: &[u8]) -> Vec<u8> {
+pub fn encode_16_11(file: &[u8]) -> Vec<u8> {
     encode(&file, 16)
 }
 
