@@ -3,6 +3,7 @@ use bitvec::prelude::AsBits;
 use bitvec::prelude::BitVec;
 use bitvec::prelude::Lsb0;
 use shared::parity_check;
+use wasm_bindgen::prelude::*;
 
 /// Flip the appropriate bits in the bitvec to match the given parity
 ///
@@ -101,6 +102,7 @@ pub fn encode_4_1(file: &[u8]) -> Vec<u8> {
     encode(&file, 4)
 }
 
+#[wasm_bindgen]
 pub fn encode_8_4(file: &[u8]) -> Vec<u8> {
     encode(&file, 8)
 }

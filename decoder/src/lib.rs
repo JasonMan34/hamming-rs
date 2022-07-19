@@ -3,6 +3,7 @@ use bitvec::prelude::AsBits;
 use bitvec::prelude::BitVec;
 use bitvec::prelude::Lsb0;
 use shared::parity_check;
+use wasm_bindgen::prelude::*;
 
 /// Flip the bit with the parity index in the bitvec
 fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
@@ -10,6 +11,7 @@ fn fix_parity(bits: &mut BitVec<u8>, parity: usize) {
     bits.set(parity, !value);
 }
 
+#[wasm_bindgen]
 /// Decodes a hamming-encoded file
 ///
 /// /// # Arguments

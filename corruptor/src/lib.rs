@@ -2,7 +2,9 @@ use bitvec::field::BitField;
 use bitvec::prelude::AsBits;
 use bitvec::prelude::Lsb0;
 use rand::Rng;
+use wasm_bindgen::prelude::*;
 
+#[wasm_bindgen]
 pub fn corrupt(file: &[u8]) -> Vec<u8> {
     let chunk_size = file[8] as usize;
     let mut bits = (&file[9..]).as_bits::<Lsb0>().to_owned();
