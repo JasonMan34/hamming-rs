@@ -16,7 +16,7 @@ bitvec = "1.0.0"
 rand = "0.8.5"
 getrandom = { features = ["js"] }
 
-wasm-bindgen = "0.2.63"
+wasm-bindgen = "0.2.81"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
