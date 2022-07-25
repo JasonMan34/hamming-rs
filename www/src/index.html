@@ -17,34 +17,52 @@
       javascript in your browser.</noscript
     >
 
-    <div class="container">
-      <h2>Hamming code machine</h2>
-      <h5>
+    <div class="mx-10 xl:mx-40 my-8">
+      <h1 class="text-4xl font-bold mb-4">Hamming code machine</h1>
+      <h3>
         Please select a file to check my hamming code on<br />
 
-        Don't worry! Everything is done on the client, and your local file will
-        remain untouched<br />
+        <p class="mb-2">
+          Don't worry! Everything is done on the client, and your local file
+          will remain untouched
+        </p>
 
         Since this is just a demo, please pick a file that is smaller than 1MB
+      </h3>
+
+      <h5
+        id="file_size_limit"
+        class="font-bold text-red-900 dark:text-red-400"
+        style="display: none"
+      >
+        Please pick a file that is smaller than 1MB
       </h5>
-
-      <span></span>
-      <input type="file" id="file" />
-
-      <br />
+      <div class="mb-2 mt-1"><input type="file" id="file" /></div>
 
       <span>Download:</span><br />
-      <button id="get_encoded">Encoded file</button>
+      <button class="ml-0" id="get_encoded">Encoded file</button>
       <button id="get_corrupted_encoded">Corrupted encoded file</button>
       <button id="get_corrupted">Corrupted file</button>
       <button id="get_recovered">Recovered file</button>
-    </div>
 
-    <div style="display: none" id="text_file_div">
-      <span>Text file detected, content is:</span><br />
-      <pre class="contained_text" id="file_content"></pre>
-      <span>After corruption, the file looks like this!</span><br />
-      <pre class="contained_text" id="corrupted_file_content"></pre>
+      <div style="display: none" id="text_file_div" class="mt-4">
+        <div class="flex flex-row space-x-4">
+          <div class="w-1/2">
+            <p class="text-lg">Text file detected, content is:</p>
+            <pre
+              class="contained_text mt-1 mb-4 bg-zinc-200 dark:bg-zinc-800 pl-3 py-2"
+              id="file_content"
+            ></pre>
+          </div>
+          <div class="w-1/2">
+            <p class="text-lg">After corruption, the file looks like this!</p>
+            <pre
+              class="contained_text bg-zinc-200 dark:bg-zinc-800 pl-3 py-2"
+              id="corrupted_file_content"
+            ></pre>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script defer src="./bootstrap.js"></script>

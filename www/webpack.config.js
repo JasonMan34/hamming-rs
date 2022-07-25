@@ -29,4 +29,9 @@ module.exports = {
   experiments: {
     asyncWebAssembly: true,
   },
+  devServer: {
+    watchFiles: ["./src/*"],
+    hot: true,
+    open: true,
+  },
 };

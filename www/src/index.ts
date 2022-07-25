@@ -33,6 +33,8 @@ fileInput.onchange = async () => {
   if (inputFile) {
     if (inputFile.size > 1000000) {
       fileSizeLimitDiv.style.display = "";
+      fileInput.value = "";
+      return;
     } else {
       fileSizeLimitDiv.style.display = "none";
     }
