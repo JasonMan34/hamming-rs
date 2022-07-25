@@ -1,3 +1,4 @@
+import "./style.css";
 import { corrupt } from "hamming-corruptor";
 import { decode } from "hamming-decoder";
 import { encode_8_4 } from "hamming-encoder";
@@ -16,6 +17,7 @@ interface File {
 let file: File | undefined;
 
 const fileInput = document.getElementById("file") as HTMLInputElement;
+const fileSizeLimitDiv = document.getElementById("file_size_limit")!;
 const getEncoded = document.getElementById("get_encoded")!;
 const getCorruptedEncoded = document.getElementById("get_corrupted_encoded")!;
 const getCorrupted = document.getElementById("get_corrupted")!;
@@ -29,6 +31,11 @@ const corruptedFileContentDiv = document.getElementById(
 fileInput.onchange = async () => {
   const inputFile = fileInput.files?.[0];
   if (inputFile) {
+    if (inputFile.size > 1000000) {
+      fileSizeLimitDiv.style.display = "";
+    } else {
+      fileSizeLimitDiv.style.display = "none";
+    }
     const buffer = await inputFile.arrayBuffer();
     const content = new Uint8Array(buffer);
     const encoded = encode_8_4(content);
