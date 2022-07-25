@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hello wasm-pack!</title>
+  </head>
+  <body>
+    <noscript
+      >This page contains webassembly and javascript content, please enable
+      javascript in your browser.</noscript
+    >
+
+    <div class="space-y-8 max-w-lg">
+      <input type="file" id="file" />
+
+      <br />
+
+      <button id="encode">Encode</button>
+      <button id="decode">Decode</button>
+      <button id="corrupt">Corrupt</button>
+      <button id="decode_corrupted">Decode corrupted file</button>
+    </div>
+
+    <script defer src="./bootstrap.js"></script>
+  </body>
+</html>
