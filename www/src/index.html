@@ -3,6 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <title>Hamming</title>
+
+    <style>
+      .contained_text {
+        max-height: 500px;
+        overflow-y: scroll;
+      }
+    </style>
   </head>
   <body>
     <noscript
@@ -10,7 +17,7 @@
       javascript in your browser.</noscript
     >
 
-    <div class="space-y-8 max-w-lg">
+    <div>
       <input type="file" id="file" />
 
       <br />
@@ -20,6 +27,13 @@
       <button id="get_corrupted_encoded">Corrupted encoded file</button>
       <button id="get_corrupted">Corrupted file</button>
       <button id="get_recovered">Recovered file</button>
+    </div>
+
+    <div style="display: none" id="text_file_div">
+      <span>Text file detected, content is:</span><br />
+      <pre class="contained_text" id="file_content"></pre>
+      <span>After corruption, the file looks like this!</span><br />
+      <pre class="contained_text" id="corrupted_file_content"></pre>
     </div>
 
     <script defer src="./bootstrap.js"></script>

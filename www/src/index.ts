@@ -1,7 +1,7 @@
 import { corrupt } from "hamming-corruptor";
 import { decode } from "hamming-decoder";
 import { encode_8_4 } from "hamming-encoder";
-import { downloadFile, FileName } from "./utils";
+import { downloadFile, FileName, isText } from "./utils";
 
 interface File {
   name: string;
@@ -16,14 +16,15 @@ interface File {
 let file: File | undefined;
 
 const fileInput = document.getElementById("file") as HTMLInputElement;
-const getEncoded = document.getElementById("get_encoded");
-const getCorruptedEncoded = document.getElementById("get_corrupted_encoded");
-const getCorrupted = document.getElementById("get_corrupted");
-const getRecovered = document.getElementById("get_recovered");
-
-if (!getEncoded || !getCorruptedEncoded || !getCorrupted || !getRecovered) {
-  throw new Error("Script load failed, missing elements in the HTML tree");
-}
+const getEncoded = document.getElementById("get_encoded")!;
+const getCorruptedEncoded = document.getElementById("get_corrupted_encoded")!;
+const getCorrupted = document.getElementById("get_corrupted")!;
+const getRecovered = document.getElementById("get_recovered")!;
+const textFileDiv = document.getElementById("text_file_div")!;
+const fileContentDiv = document.getElementById("file_content")!;
+const corruptedFileContentDiv = document.getElementById(
+  "corrupted_file_content"
+)!;
 
 fileInput.onchange = async () => {
   const inputFile = fileInput.files?.[0];
@@ -36,7 +37,7 @@ fileInput.onchange = async () => {
     const decodedUnfixed = decode(corrupted, false);
     const text = new TextDecoder().decode(buffer);
 
-    console.log(inputFile.name);
+    console.log(text);
 
     file = {
       name: fileInput.value,
@@ -47,6 +48,8 @@ fileInput.onchange = async () => {
       decodedUnfixed,
       text,
     };
+
+    tryDisplayText();
   }
 };
 
@@ -81,3 +84,16 @@ getRecovered.onclick = () => {
   const fileName = new FileName(file.name).appendName("_recovered");
   downloadFile(fileName.getFileName(), file.decodedFixed);
 };
+
+function tryDisplayText() {
+  if (!file) return;
+
+  if (isText(file.text)) {
+    textFileDiv.setAttribute("style", "display: block");
+
+    fileContentDiv.innerHTML = file.text;
+    corruptedFileContentDiv.innerHTML = new TextDecoder().decode(
+      file.decodedUnfixed
+    );
+  }
+}

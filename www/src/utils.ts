@@ -37,3 +37,7 @@ export class FileName {
     return this.name + "." + this.extension;
   }
 }
+
+export const isText = (str: string) => {
+  return /^[\s!-~א-ת]+$/.test(str.substring(0, 100));
+};
