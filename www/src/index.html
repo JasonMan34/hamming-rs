@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Hello wasm-pack!</title>
+    <title>Hamming</title>
   </head>
   <body>
     <noscript
@@ -15,10 +15,11 @@
 
       <br />
 
-      <button id="encode">Encode</button>
-      <button id="decode">Decode</button>
-      <button id="corrupt">Corrupt</button>
-      <button id="decode_corrupted">Decode corrupted file</button>
+      <span>Download:</span><br />
+      <button id="get_encoded">Encoded file</button>
+      <button id="get_corrupted_encoded">Corrupted encoded file</button>
+      <button id="get_corrupted">Corrupted file</button>
+      <button id="get_recovered">Recovered file</button>
     </div>
 
     <script defer src="./bootstrap.js"></script>
