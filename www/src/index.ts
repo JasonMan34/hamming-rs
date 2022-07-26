@@ -52,7 +52,7 @@ fileInput.onchange = async () => {
     console.log(text);
 
     file = {
-      name: fileInput.value,
+      name: inputFile.name,
       content,
       encoded,
       corrupted,
