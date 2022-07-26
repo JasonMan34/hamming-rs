@@ -7,6 +7,9 @@ import { downloadFile, FileName, isText } from "./utils";
 // Small hack to prevent bad first render
 document.body.style.display = "";
 
+// work?
+const a = 1;
+
 interface File {
   name: string;
   content: Uint8Array;
