@@ -29,7 +29,7 @@ fn parse_args() -> (String, String, HammingLevel) {
             std::process::exit(1);
         }
         None => {
-            eprintln!("Did not supply decoded_file argument");
+            eprintln!("Did not supply hamming_level argument. Valid values are 1/2/3");
             std::process::exit(1);
         }
     };
