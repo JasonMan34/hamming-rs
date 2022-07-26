@@ -4,6 +4,9 @@ import { decode } from "hamming-decoder";
 import { encode_8_4 } from "hamming-encoder";
 import { downloadFile, FileName, isText } from "./utils";
 
+// Small hack to prevent bad first render
+document.body.style.display = "";
+
 interface File {
   name: string;
   content: Uint8Array;
