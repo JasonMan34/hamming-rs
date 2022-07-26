@@ -4,7 +4,7 @@
 
 @layer components {
   body {
-    @apply bg-white dark:bg-zinc-900 text-black dark:text-gray-100;
+    @apply bg-white dark:bg-gray-800 text-black dark:text-gray-100;
   }
   button {
     @apply px-3 py-1 mx-1 rounded-md bg-blue-300 hover:bg-blue-400 dark:bg-blue-700 dark:hover:bg-blue-600;
