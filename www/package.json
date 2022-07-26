@@ -4,8 +4,10 @@
   "description": "Aaaaa",
   "main": "index.js",
   "scripts": {
+    "build-wasm": "cd ../encoder && wasm-pack build && cd ../decoder && wasm-pack build && cd ../corruptor && wasm-pack build && cd ../www",
+    "build:ci": "npm run build-wasm && npm run build",
     "build": "webpack --config webpack.config.js",
-    "start:build": "cd ../encoder && wasm-pack build && cd ../decoder && wasm-pack build && cd ../corruptor && wasm-pack build && cd ../www && npm start",
+    "start:build": "npm run build-wasm && && npm start",
     "start": "webpack-dev-server"
   },
   "license": "(MIT OR Apache-2.0)",
